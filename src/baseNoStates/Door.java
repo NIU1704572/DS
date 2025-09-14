@@ -2,15 +2,20 @@ package baseNoStates;
 
 import baseNoStates.requests.RequestReader;
 import org.json.JSONObject;
-
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Door {
+  private final byte unlocked = 0, locked = 1, unlockedShortly = 2;
   private final String id;
   private boolean closed; // physically
+  private byte state;
 
   public Door(String id) {
     this.id = id;
     closed = true;
+    state = 0;
   }
 
   public void processRequest(RequestReader request) {
@@ -23,6 +28,19 @@ public class Door {
       System.out.println("not authorized");
     }
     request.setDoorStateName(getStateName());
+  }
+
+  private void lockShortly(){
+    TimerTask lockDoor = new TimerTask() {
+      public void run() {
+        System.out.println("Door"+ id + "locked: " + new Date() + "n");
+        state = locked;
+      }
+    };
+    Timer timer = new Timer();
+    timer.schedule(lockDoor,10000); //PREGUNTAR SI HAURIA DE FER EL CANCEL I/O EL PURGE PER ALLIBERAR ESPAI O NO CAL PERQUÈ ÉS LOCAL
+    //timer.cancel();
+    //timer.purge();
   }
 
   private void doAction(String action) {
@@ -42,14 +60,26 @@ public class Door {
         }
         break;
       case Actions.LOCK:
-        // TODO
-        // fall through
+        if (state == locked){
+          System.out.println("Can't lock door " + id + " because it's already locked");
+        } else {
+          state = locked;
+        }
+        break;
       case Actions.UNLOCK:
-        // TODO
-        // fall through
+        if (state == unlocked){
+          System.out.println("Can't unlock door " + id + " because it's already unlocked");
+        } else {
+          state = unlocked;
+        }
+        break;
       case Actions.UNLOCK_SHORTLY:
-        // TODO
-        System.out.println("Action " + action + " not implemented yet");
+        if (state == unlocked){
+          System.out.println("Can't unlock door " + id + " because it's already unlocked");
+        } else {
+          state = unlockedShortly;
+          lockShortly();
+        }
         break;
       default:
         assert false : "Unknown action " + action;
@@ -66,7 +96,12 @@ public class Door {
   }
 
   public String getStateName() {
-    return "unlocked";
+    if (state == 1){
+      return "locked";
+    } else {
+      return "unlocked";
+    }
+
   }
 
   @Override
