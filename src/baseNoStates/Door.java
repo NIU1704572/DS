@@ -3,8 +3,6 @@ package baseNoStates;
 import baseNoStates.requests.RequestReader;
 import org.json.JSONObject;
 import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Door {
   private final byte unlocked = 0, locked = 1, unlockedShortly = 2;
@@ -31,16 +29,22 @@ public class Door {
   }
 
   private void lockShortly(){
-    TimerTask lockDoor = new TimerTask() {
+    Runnable lockingThread = new Runnable() {
+      @Override
       public void run() {
-        System.out.println("Door"+ id + "locked: " + new Date() + "n");
-        state = locked;
+        try{
+          Thread.sleep(10000);
+        }
+        catch (InterruptedException e){
+          System.out.println("Unlock shortly thread couldn't be interrupted"); return;
+        }
+        if (closed) {
+          state = locked;
+        }
       }
     };
-    Timer timer = new Timer();
-    timer.schedule(lockDoor,10000); //PREGUNTAR SI HAURIA DE FER EL CANCEL I/O EL PURGE PER ALLIBERAR ESPAI O NO CAL PERQUÈ ÉS LOCAL
-    //timer.cancel();
-    //timer.purge();
+    Thread thread = new Thread(lockingThread);
+    thread.start();
   }
 
   private void doAction(String action) {
@@ -96,12 +100,22 @@ public class Door {
   }
 
   public String getStateName() {
-    if (state == 1){
-      return "locked";
-    } else {
-      return "unlocked";
-    }
+    String stateName = "";
+    switch (state) {
 
+      case locked:
+        stateName = "locked";
+        break;
+
+      case unlocked:
+        stateName = "unlocked";
+        break;
+
+      case unlockedShortly:
+        stateName = "unlocked_shortly";
+        break;
+    };
+    return stateName;
   }
 
   @Override
