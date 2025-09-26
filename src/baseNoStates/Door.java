@@ -7,6 +7,7 @@ import org.json.JSONObject;
 public class Door {
   private final String id;
   private boolean closed; // physically
+  private DoorState state; // Digitally
 
   public Door(String id) {
     this.id = id;
@@ -42,11 +43,11 @@ public class Door {
         }
         break;
       case Actions.LOCK:
-        // TODO
-        // fall through
+        state = new LockedState(); //PONER CONDICIONALES
+        break;
       case Actions.UNLOCK:
-        // TODO
-        // fall through
+        state = new LockedState(); //PONER CONDICIONALES
+        break;
       case Actions.UNLOCK_SHORTLY:
         // TODO
         System.out.println("Action " + action + " not implemented yet");
@@ -65,9 +66,7 @@ public class Door {
     return id;
   }
 
-  public String getStateName() {
-    return "unlocked";
-  }
+  public String getStateName() {return state.getState(); }
 
   @Override
   public String toString() {
