@@ -5,7 +5,7 @@ import org.json.JSONObject;
 import java.util.Date;
 
 public class Door {
-  private final byte unlocked = 0, locked = 1, unlockedShortly = 2;
+  private static final byte unlocked = 0, locked = 1, unlockedShortly = 2, propped = 3; //Declaring states
   private final String id;
   private boolean closed; // physically
   private byte state;
@@ -36,10 +36,12 @@ public class Door {
           Thread.sleep(10000);
         }
         catch (InterruptedException e){
-          System.out.println("Unlock shortly thread couldn't be interrupted"); return;
+          System.out.println("Unlock shortly thread couldn't be interrupted");
         }
         if (closed) {
           state = locked;
+        } else {
+          state = propped; //Could add additional propped timer
         }
       }
     };
@@ -48,12 +50,14 @@ public class Door {
   }
 
   private void doAction(String action) {
+    byte newState = - 1;
+
     switch (action) {
       case Actions.OPEN:
-        if (closed) {
+        if (closed && (state == unlocked || state == unlockedShortly)) {
           closed = false;
         } else {
-          System.out.println("Can't open door " + id + " because it's already open");
+          System.out.println("Can't open door " + id + " because it's already open or locked");
         }
         break;
       case Actions.CLOSE:
@@ -67,27 +71,32 @@ public class Door {
         if (state == locked){
           System.out.println("Can't lock door " + id + " because it's already locked");
         } else {
-          state = locked;
+          newState = locked;
         }
         break;
       case Actions.UNLOCK:
         if (state == unlocked){
           System.out.println("Can't unlock door " + id + " because it's already unlocked");
         } else {
-          state = unlocked;
+          newState = unlocked;
         }
         break;
       case Actions.UNLOCK_SHORTLY:
         if (state == unlocked){
           System.out.println("Can't unlock door " + id + " because it's already unlocked");
         } else {
-          state = unlockedShortly;
+          newState = unlockedShortly;
           lockShortly();
         }
         break;
       default:
         assert false : "Unknown action " + action;
         System.exit(-1);
+    }
+    if(newState != -1 && !closed){
+      System.out.println("Can't change door " + id + "'s state because it's open");
+    } else{
+      state = newState;
     }
   }
 
@@ -100,21 +109,14 @@ public class Door {
   }
 
   public String getStateName() {
-    String stateName = "";
-    switch (state) {
-
-      case locked:
-        stateName = "locked";
-        break;
-
-      case unlocked:
-        stateName = "unlocked";
-        break;
-
-      case unlockedShortly:
-        stateName = "unlocked_shortly";
-        break;
+    String stateName = switch (state) {
+      case locked -> "locked";
+      case unlocked -> "unlocked";
+      case unlockedShortly -> "unlocked_shortly";
+      case propped -> "propped";
+      default -> "";
     };
+
     return stateName;
   }
 
