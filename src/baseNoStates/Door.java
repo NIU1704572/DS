@@ -12,6 +12,7 @@ public class Door {
   public Door(String id) {
     this.id = id;
     closed = true;
+    state = new LockedState();
   }
 
   public void processRequest(RequestReader request) {
@@ -26,28 +27,47 @@ public class Door {
     request.setDoorStateName(getStateName());
   }
 
+  public boolean validAction(String action) {
+    //function that unifies common state change checks
+    if (action.equals(state.getState())) {
+      System.out.println("Can't " + action + " door " + id + " because it's already" + state.getState()); // check the new state isn't the same as the previous one
+      return false;
+    } else if (!closed) {
+      System.out.println("Can't " + action + " door " + id + " because it may not change state while open");           //check door isn't open
+      return false;
+    }
+    return true;
+  }
+
   private void doAction(String action) {
     switch (action) {
       case Actions.OPEN:
-        if (closed) {
-          closed = false;
-        } else {
-          System.out.println("Can't open door " + id + " because it's already open");
+        if (!closed) {
+          System.out.println("Can't open door " + id + " because it's already open"); // check door isn't already open
+        } else if (state.getState().equals("locked")){
+          System.out.println("Can't open door " + id + " because it's locked"); // check door isn't locked
         }
-        break;
+        else {
+          closed = false;
+        } break;
+
       case Actions.CLOSE:
         if (closed) {
-          System.out.println("Can't close door " + id + " because it's already closed");
+          System.out.println("Can't close door " + id + " because it's already closed"); // check door isn't already closed
         } else {
           closed = true;
-        }
-        break;
+        } break;
+
       case Actions.LOCK:
-        state = new LockedState(); //PONER CONDICIONALES
-        break;
+        if(validAction(action)){  // call function that verifies common checks
+          state = new LockedState();
+        } break;
+
       case Actions.UNLOCK:
-        state = new LockedState(); //PONER CONDICIONALES
-        break;
+        if(validAction(action)){  // call function that verifies common checks
+          state = new UnlockedState();
+        } break;
+
       case Actions.UNLOCK_SHORTLY:
         // TODO
         System.out.println("Action " + action + " not implemented yet");
