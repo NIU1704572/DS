@@ -1,6 +1,6 @@
 package baseNoStates.requests;
 
-import baseNoStates.Actions;
+import baseNoStates.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -65,6 +65,17 @@ public class RequestArea implements Request {
   // it won't be authorized and nothing will happen to them.
   public void process() {
     // commented out until Area, Space and Partition are implemented
+    User user = DirectoryUsers.findUserByCredential(credential);
+    Area area = DirectoryAreas.findAreaById(areaId);
+    assert area != null : "area " + areaId + " not found";
+
+    for (Door door : area.getDoorsGivingAccess()) {
+      RequestReader requestReader = new RequestReader(credential, action, now, door.getId());
+      requestReader.process();
+    }
+    // this sets the boolean authorize attribute of the request
+    // even if not authorized we process the request, so that if desired we could log all
+    // the requests made to the server as part of processing the request
 
     /*
     // make the door requests and put them into the area request to be authorized later and

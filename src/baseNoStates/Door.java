@@ -3,16 +3,26 @@ package baseNoStates;
 import baseNoStates.requests.RequestReader;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 
 public class Door {
   private final String id;
+  private final String from;
+  private final String to;
   private boolean closed; // physically
   private DoorState state; // Digitally
 
-  public Door(String id) {
+
+  public Door(){id=""; from="";to="";}
+
+  public Door(String id, String from, String to) {
     this.id = id;
+    this.from = from;
+    this.to = to;
     closed = true;
     state = new LockedState();
+
   }
 
   public void processRequest(RequestReader request) {
