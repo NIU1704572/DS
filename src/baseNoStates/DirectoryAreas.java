@@ -9,28 +9,28 @@ public class DirectoryAreas {
   public static void makeAreas(){
     ArrayList<Door> doors = DirectoryDoors.getAllDoors();
 
-    Area building = new Area(null,"building");
+    Partition building = new Partition(null,"building");
 
 
-    Area basement = new Area(building,"basement");
-    Area parking = new Area(basement,"parking", doors.getFirst(), doors.get(1)); // d1,d2
+    Partition basement = new Partition(building,"basement");
+    Space parking = new Space(basement,"parking", doors.getFirst(), doors.get(1)); // d1,d2
 
-    Area ground_floor = new Area(building,"ground_floor");
+    Partition ground_floor = new Partition(building,"ground_floor");
 
-    Area hall = new Area(ground_floor,"hall", doors.get(2), doors.get(3)); // d3, d4
-    Area room1 = new Area(ground_floor,"room1", doors.get(4)); // d5
-    Area room2 = new Area(ground_floor,"room2", doors.get(5)); // d6
+    Space hall = new Space(ground_floor,"hall", doors.get(2), doors.get(3)); // d3, d4
+    Space room1 = new Space(ground_floor,"room1", doors.get(4)); // d5
+    Space room2 = new Space(ground_floor,"room2", doors.get(5)); // d6
 
-    Area firstFloor = new Area(building,"floor1");
+    Partition floor1 = new Partition(building,"floor1");
 
-    Area corridor = new Area(firstFloor,"corridor", doors.get(6)); //d7
-    Area room3 = new Area(firstFloor,"room3", doors.get(7));      // d8
-    Area IT = new Area(firstFloor,"IT", doors.get(8));            // d9
+    Space corridor = new Space(floor1,"corridor", doors.get(6)); //d7
+    Space room3 = new Space(floor1,"room3", doors.get(7));      // d8
+    Space IT = new Space(floor1,"IT", doors.get(8));            // d9
 
-    Area stairs = new Area(building,"stairs", doors.get(1), doors.get(3), doors.get(6)); // d2, d4, d7
-    Area exterior = new Area(building,"exterior", doors.getFirst(), doors.get(2)); // d1, d3
+    Space stairs = new Space(building,"stairs", doors.get(1), doors.get(3), doors.get(6)); // d2, d4, d7
+    Space exterior = new Space(building,"exterior", doors.getFirst(), doors.get(2)); // d1, d3
 
-    allAreas = new ArrayList<>(Arrays.asList(basement, ground_floor, firstFloor, parking, hall, room1, room2, corridor, room3, IT, stairs, exterior));
+    allAreas = new ArrayList<>(Arrays.asList(basement, ground_floor, floor1, parking, hall, room1, room2, corridor, room3, IT, stairs, exterior));
   }
 
   public static Area findAreaById(String areaId) {
