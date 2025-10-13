@@ -25,8 +25,12 @@ public class Partition extends Area{
   public ArrayList<Door> getDoorsGivingAccess(){
     ArrayList<Door> returnArray = new ArrayList<>();
 
-    spaces.forEach(space -> returnArray.addAll(getDoorsGivingAccess()));
+    spaces.forEach(space -> returnArray.addAll(space.getDoorsGivingAccess()));
 
     return returnArray;
+  }
+
+  public void addSpace(Area area){
+    spaces.add(area);
   }
 }

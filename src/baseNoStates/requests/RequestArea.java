@@ -30,6 +30,23 @@ public class RequestArea implements Request {
   }
 
   @Override
+  public String toString() {
+    String requestsDoorsStr;
+    if (requests.size() == 0) {
+      requestsDoorsStr = "";
+    } else {
+      requestsDoorsStr = requests.toString();
+    }
+    return "Request{"
+        + "credential=" + credential
+        + ", action=" + action
+        + ", now=" + now
+        + ", areaId=" + areaId
+        + ", requestsDoors=" + requestsDoorsStr
+        + "}";
+  }
+
+  @Override
   public JSONObject answerToJson() {
     JSONObject json = new JSONObject();
     json.put("action", action);
@@ -39,26 +56,9 @@ public class RequestArea implements Request {
       jsonRequests.put(rd.answerToJson());
     }
     json.put("requestsDoors", jsonRequests);
-    json.put("todo", "request areas not yet implemented");
     return json;
   }
 
-  @Override
-  public String toString() {
-    String requestsDoorsStr;
-    if (requests.size() == 0) {
-      requestsDoorsStr = "";
-    } else {
-      requestsDoorsStr = requests.toString();
-    }
-    return "Request{"
-            + "credential=" + credential
-            + ", action=" + action
-            + ", now=" + now
-            + ", areaId=" + areaId
-            + ", requestsDoors=" + requestsDoorsStr
-            + "}";
-  }
 
   // processing the request of an area is creating the corresponding door requests and forwarding
   // them to all of its doors. For some it may be authorized and action will be done, for others
@@ -69,16 +69,27 @@ public class RequestArea implements Request {
     Area area = DirectoryAreas.findAreaById(areaId);
     assert area != null : "area " + areaId + " not found";
 
-    for (Door door : area.getDoorsGivingAccess()) {
+    ArrayList<Door> givingAccess = area.getDoorsGivingAccess();
+    //since a door can be contained by multiple unrelated partitions, we check for repeats
+    ArrayList<Door> requestedDoors = new ArrayList<>();
+    for (Door door : givingAccess) {
+      if (!requestedDoors.contains(door)) {
+        requestedDoors.add(door);
+      }
+    }
+    System.out.println(requestedDoors);
+    for (Door door : requestedDoors) {
       RequestReader requestReader = new RequestReader(credential, action, now, door.getId());
       requestReader.process();
-
+      requests.add(requestReader);
     }
+  }
+}
     // this sets the boolean authorize attribute of the request
     // even if not authorized we process the request, so that if desired we could log all
     // the requests made to the server as part of processing the request
 
-    /*
+
     // make the door requests and put them into the area request to be authorized later and
     // processed later
     // an Area is a Space or a Partition
@@ -90,6 +101,5 @@ public class RequestArea implements Request {
         // after process() the area request contains the answer as the answer
         // to each individual door request, that is read by the simulator/Flutter app
 
-     */
-  }
-}
+
+

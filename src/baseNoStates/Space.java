@@ -11,15 +11,13 @@ public class Space extends Area{
     this.doors = new ArrayList<>();
     this.doors.addAll(Arrays.asList(doors));
     if (parent != null) {
-      parent.spaces.add(this);
+      parent.addSpace(this);
     }
   }
   @Override
   public ArrayList<Door> getDoorsGivingAccess() {
-    ArrayList<Door> returnArray = new ArrayList<>();
-    doors.forEach(door -> returnArray.addAll(doors));
 
-    return returnArray;
+    return  new ArrayList<>(doors);
   }
 
   @Override

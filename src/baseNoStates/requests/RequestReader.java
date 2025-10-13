@@ -60,7 +60,7 @@ public class RequestReader implements Request {
             + ", closed=" + doorClosed
             + ", authorized=" + authorized
             + ", reasons=" + reasons
-            + "}";
+            + "}     ";
   }
 
   public JSONObject answerToJson() {

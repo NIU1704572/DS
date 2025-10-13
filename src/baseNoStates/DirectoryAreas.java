@@ -30,7 +30,7 @@ public class DirectoryAreas {
     Space stairs = new Space(building,"stairs", doors.get(1), doors.get(3), doors.get(6)); // d2, d4, d7
     Space exterior = new Space(building,"exterior", doors.getFirst(), doors.get(2)); // d1, d3
 
-    allAreas = new ArrayList<>(Arrays.asList(basement, ground_floor, floor1, parking, hall, room1, room2, corridor, room3, IT, stairs, exterior));
+    allAreas = new ArrayList<>(Arrays.asList(ground_floor, floor1, parking, hall, room1, room2, corridor, basement, room3, IT, stairs, exterior, building));
   }
 
   public static Area findAreaById(String areaId) {
@@ -39,7 +39,14 @@ public class DirectoryAreas {
         return area;
       }
     }
+
     System.out.println("area with id " + areaId + " not found");
     return null; // otherwise we get a Java error
+  }
+  public static void main(){
+    DirectoryDoors.makeDoors();
+    DirectoryUsers.makeUsers();
+    DirectoryAreas.makeAreas();
+    System.out.println(findAreaById("basement").getDoorsGivingAccess());
   }
 }
