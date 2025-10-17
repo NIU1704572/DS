@@ -1,6 +1,6 @@
 package baseNoStates;
 
 public class UnlockedState extends DoorState{
-  UnlockedState() { super("unlocked"); }
+  UnlockedState(Door door) { super("unlocked", door); }
 
 }

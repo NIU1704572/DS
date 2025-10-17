@@ -8,24 +8,19 @@ import java.util.Observable;
 import java.util.Observer;
 
 
-public class Door implements Observer {
+public class Door{
   private final String id;
   private final String from;
   private final String to;
   private boolean closed; // physically
   private DoorState state; // Digitally
-  private int timer;
-
-
-  public Door(){id=""; from="";to="";}
 
   public Door(String id, String from, String to) {
     this.id = id;
     this.from = from;
     this.to = to;
     closed = true;
-    state = new LockedState();
-    timer = 0;
+    state = new LockedState(this);
   }
 
   public void processRequest(RequestReader request) {
@@ -33,7 +28,7 @@ public class Door implements Observer {
     // its state, and if closed or open
     if (request.isAuthorized()) {
       String action = request.getAction();
-      doAction(action);
+      state.doAction(action);
     } else {
       System.out.println("not authorized");
     }
@@ -52,55 +47,6 @@ public class Door implements Observer {
     return true;
   }
 
-  private void doAction(String action) {
-    switch (action) {
-      case Actions.OPEN:
-        if (!closed) {
-          System.out.println("Can't open door " + id + " because it's already open"); // check door isn't already open
-        } else if (state.getState().equals("locked")){
-          System.out.println("Can't open door " + id + " because it's locked"); // check door isn't locked
-        }
-        else {
-          closed = false;
-        } break;
-
-      case Actions.CLOSE:
-        if (closed) {
-          System.out.println("Can't close door " + id + " because it's already closed"); // check door isn't already closed
-        } else {
-          closed = true;
-          state = new LockedState();
-        } break;
-
-      case Actions.LOCK:
-        if(validAction(action)){  // call function that verifies common checks
-          state = new LockedState();
-        } break;
-
-      case Actions.UNLOCK:
-        if(validAction(action)){  // call function that verifies common checks
-          state = new UnlockedState();
-        } break;
-
-      case Actions.UNLOCK_SHORTLY:
-        DirectoryDoors.getTimer().addObserver(this);
-        state = new UnlockedShortlyState();
-        break;
-
-      default:
-        assert false : "Unknown action " + action;
-        System.exit(-1);
-    }
-  }
-  @Override
-  public void update(Observable o, Object arg) {
-    timer++;
-    if (timer == 10) {
-      state = ((UnlockedShortlyState)state).nextState(closed);
-      DirectoryDoors.getTimer().deleteObserver(this);
-      timer = 0;
-    }
-  }
 
   public boolean isClosed() {
     return closed;
@@ -117,6 +63,8 @@ public class Door implements Observer {
   public String getTo() { return to; }
 
   public void setState(DoorState state) { this.state = state; }
+
+  public void setClosed(boolean closed) { this.closed = closed; }
 
   @Override
   public String toString() {
