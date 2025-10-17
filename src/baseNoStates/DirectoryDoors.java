@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 public final class DirectoryDoors {
   private static ArrayList<Door> allDoors;
+  private static final DoorTimer timer = new DoorTimer();
 
   public static void makeDoors() {
     // basement
@@ -48,5 +49,7 @@ public final class DirectoryDoors {
     System.out.println(allDoors);
     return allDoors;
   }
+
+  public static DoorTimer getTimer() {return timer;  }
 
 }

@@ -33,4 +33,5 @@ public class Partition extends Area{
   public void addSpace(Area area){
     spaces.add(area);
   }
+
 }

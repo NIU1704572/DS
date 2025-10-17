@@ -43,10 +43,5 @@ public class DirectoryAreas {
     System.out.println("area with id " + areaId + " not found");
     return null; // otherwise we get a Java error
   }
-  public static void main(){
-    DirectoryDoors.makeDoors();
-    DirectoryUsers.makeUsers();
-    DirectoryAreas.makeAreas();
-    System.out.println(findAreaById("basement").getDoorsGivingAccess());
-  }
+
 }

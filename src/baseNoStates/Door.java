@@ -4,14 +4,17 @@ import baseNoStates.requests.RequestReader;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 
-public class Door {
+public class Door implements Observer {
   private final String id;
   private final String from;
   private final String to;
   private boolean closed; // physically
   private DoorState state; // Digitally
+  private int timer;
 
 
   public Door(){id=""; from="";to="";}
@@ -22,7 +25,7 @@ public class Door {
     this.to = to;
     closed = true;
     state = new LockedState();
-
+    timer = 0;
   }
 
   public void processRequest(RequestReader request) {
@@ -66,6 +69,7 @@ public class Door {
           System.out.println("Can't close door " + id + " because it's already closed"); // check door isn't already closed
         } else {
           closed = true;
+          state = new LockedState();
         } break;
 
       case Actions.LOCK:
@@ -79,12 +83,22 @@ public class Door {
         } break;
 
       case Actions.UNLOCK_SHORTLY:
-        // TODO
-        System.out.println("Action " + action + " not implemented yet");
+        DirectoryDoors.getTimer().addObserver(this);
+        state = new UnlockedShortlyState();
         break;
+
       default:
         assert false : "Unknown action " + action;
         System.exit(-1);
+    }
+  }
+  @Override
+  public void update(Observable o, Object arg) {
+    timer++;
+    if (timer == 10) {
+      state = ((UnlockedShortlyState)state).nextState(closed);
+      DirectoryDoors.getTimer().deleteObserver(this);
+      timer = 0;
     }
   }
 
@@ -97,6 +111,12 @@ public class Door {
   }
 
   public String getStateName() {return state.getState(); }
+
+  public String getFrom() { return from; }
+
+  public String getTo() { return to; }
+
+  public void setState(DoorState state) { this.state = state; }
 
   @Override
   public String toString() {

@@ -3,7 +3,10 @@ package baseNoStates.requests;
 import baseNoStates.DirectoryDoors;
 import baseNoStates.DirectoryUsers;
 import baseNoStates.Door;
+import baseNoStates.Area;
+import baseNoStates.DirectoryAreas;
 import baseNoStates.User;
+import baseNoStates.Actions;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -91,14 +94,55 @@ public class RequestReader implements Request {
   // the result is put into the request object plus, if not authorized, why not,
   // only for testing
   private void authorize(User user, Door door) {
+    //TODO: get the who, where, when and what in order to decide, and if not
+
+    authorized = false;
+
+    // si user es intruso/desconocido
     if (user == null) {
-      authorized = false;
-      addReason("user doesn't exists");
-    } else {
-      //TODO: get the who, where, when and what in order to decide, and if not
-      // authorized add the reason(s)
-      authorized = true;
+        addReason("User doesn't exist");
+        return;
     }
+
+    // si user es blank
+    if (user.getUserGroup().getName().equals("blank")) {
+        addReason("User not authorized for this action");
+        return;
+    }
+
+    // OPEN y CLOSE para todo el mundo excepto employees en parking
+    if (action.equals(Actions.OPEN) || action.equals(Actions.CLOSE) || action.equals(Actions.UNLOCK_SHORTLY)) {
+        if (user.getUserGroup().getName().equals("employees")) {
+
+            Area fromArea = DirectoryAreas.findAreaById(door.getFrom());
+            Area toArea = DirectoryAreas.findAreaById(door.getTo());
+
+            boolean isParkingDoor = (fromArea.getId().equals("parking")) || (toArea.getId().equals("parking"));
+
+            if (isParkingDoor) {
+                addReason("User not authorized for this action");
+                return;
+            }
+        }
+        authorized = true;
+        userName = user.getName();
+        return;
+    }
+
+    // Verificar si puede LOCK/UNLOCK/UNLOCK_SHORTLY en tiempo
+    if (!user.canSendRequests(now)) {
+        addReason("User not authorized at this time");
+        return;
+    }
+
+    // Verificar si puede LOCK/UNLOCK/UNLOCK_SHORTLY
+    if (!user.canDoAction(action)) {
+        addReason("User not authorized for this action");
+        return;
+    }
+
+    authorized = true;
+    userName = user.getName();
   }
 }
 
