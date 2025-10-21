@@ -5,6 +5,8 @@ import java.util.Arrays;
 
 public final class DirectoryDoors {
   private static ArrayList<Door> allDoors;
+
+  // Temporizador compartido para comportamientos temporizados de puertas
   private static final DoorTimer timer = new DoorTimer();
 
   public static void makeDoors() {
@@ -50,6 +52,8 @@ public final class DirectoryDoors {
     return allDoors;
   }
 
+  //Acceso al temporizador global de puertas.
+  //Permite coordinar tareas temporizadas relacionadas con el estado de Door.
   public static DoorTimer getTimer() {return timer;  }
 
 }

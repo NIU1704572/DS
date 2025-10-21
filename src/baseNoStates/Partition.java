@@ -8,6 +8,7 @@ public class Partition extends Area{
   ArrayList<Area> spaces;
 
   public Partition(Partition parent, String id, Area ... spaces) {
+    //Construye una partición dentro de la jerarquía de áreas.
     this.id=id;
     this.spaces = new ArrayList<>();
     this.spaces.addAll(Arrays.asList(spaces));
