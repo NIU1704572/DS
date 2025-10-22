@@ -13,14 +13,6 @@ public class UnlockedShortlyState extends DoorState implements Observer {
     secondsElapsed = 0; // arranca la cuenta atrás al entrar en el estado
   }
 
-
-  public DoorState nextState(boolean closed){
-    if(closed){
-      return new LockedState(door);
-    }
-    return new ProppedState(door);
-  }
-
   @Override
   public void update(Observable o, Object arg) {
     secondsElapsed++;

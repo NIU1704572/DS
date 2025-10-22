@@ -34,20 +34,6 @@ public class Door{
     }
     request.setDoorStateName(getStateName());
   }
-
-  public boolean validAction(String action) {
-    //function that unifies common state change checks
-    if (action.equals(state.getState())) {
-      System.out.println("Can't " + action + " door " + id + " because it's already" + state.getState()); // check the new state isn't the same as the previous one
-      return false;
-    } else if (!closed) {
-      System.out.println("Can't " + action + " door " + id + " because it may not change state while open");           //check door isn't open
-      return false;
-    }
-    return true;
-  }
-
-
   public boolean isClosed() {
     return closed;
   }

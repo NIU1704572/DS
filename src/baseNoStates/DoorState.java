@@ -1,24 +1,23 @@
 package baseNoStates;
 
 public abstract class DoorState {
-  // Abstract class used to implement state pattern.
-  // Most methods are implemented here and overriden when necessary.
-  // We don't want to repeat all methods in every class that inherits from this one, when just one method is different.
+  // Classe abstracta. La hereden la resta de classes del patró state.
+  // Els mètodes estan implementats aquí i se'ls fa override quan cal perquè no vol·lem
+  // repetir quasi tot el codi quan només un mètode és diferent.
 
 
   protected final String stateName;
   protected final Door door;
 
   public DoorState(String stateName, Door door) {
-      this.stateName = stateName; // string to return when getState is called
+      this.stateName = stateName; // string que es retorna quan es crida getState()
       this.door = door;
   }
   public String getState() {return stateName;}
 
   public void open(){
-    // Method is implemented in the abstract class because most states
-    // share the same checks, and we want to avoid repeating code.
-    // It may be overridden when necessary (LockedState, for example)
+    // El mètode està implementat a la classe abstracta per evitar repetir codi.
+    // Les classes que ho necessitin, poden fer override (LockedState, per exemple).
     if(door.isClosed()) door.setClosed(false); //check if door is open
     else System.out.println("Can't open door " + door.getId() + " because it's already open");
   }
@@ -32,26 +31,35 @@ public abstract class DoorState {
     else System.out.println("Can't close door " + door.getId() + " because it's already closed"); }
 
   public void changeState(DoorState newState, String action) {
-    //This method does the most basic and common checks. It exists so we may not repeat them in other classes.
+    // Aquest mètode fa les comprovacions comuns. Existeix per no repetir-les en altres classes.
 
-    // if new state = this state
+    // si l'estat anterior és el mateix que el nou, es conserva l'estat anterior
     if (newState.stateName.equals(stateName)) {
       System.out.println("Can't " + action + " door " + door.getId()
           + " because it's already locked"); // check the new state isn't the same as the previous one
       return;
 
-    // if door is closed
+    //Si la porta és oberta, no pot canviar d'estat
     } else if (!door.isClosed()) {
-      System.out.println("Can't " + action + " door " + door.getId()
-          + " because it may not change state while open");
+      if(stateName.equals("propped")){
+        //Si la porta està bloquejada donem un missatge més concret
+        System.out.println("Can't " + action + " door " + door.getId() +
+            " because the door is currently propped and may not change state until closed");
+      }
+      else {
+        System.out.println("Can't " + action + " door " + door.getId()
+            + " because it may not change state while open");
+      }
     }
-
+    // Si la porta està tancada i el nou estat és diferent
     door.setState(newState);
   }
 
   public void doAction(String action) {
-    // This method calls the changeState, open or close methods, which can be overriden by inheritor
-    // classes (this method may be, as well, if necessary; like in UnlockedShortlyState).
+    // Aquest és un mètode és "template method"
+    // Les accions que no són open i close no tenen funcions designades perquè s'executen de la mateixa
+    // manera en totes les classes. Hem decidit fer aquesta implemetació perquè, encara que no fa
+    // un bon ús del polimorfisme, només necessitem una sola funció i repetim molt menys codi.
     switch (action) {
       case Actions.OPEN:
         this.open();
