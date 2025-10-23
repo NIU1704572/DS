@@ -15,7 +15,7 @@ public abstract class DoorState {
   }
   public String getState() {return stateName;}
 
-  public void open(){
+  protected void open(){
     // El mètode està implementat a la classe abstracta per evitar repetir codi.
     // Les classes que ho necessitin, poden fer override (LockedState, per exemple).
     if(door.isClosed()) door.setClosed(false); //check if door is open
@@ -23,14 +23,14 @@ public abstract class DoorState {
   }
 
 
-  public void close(){
+  protected void close(){
     // Method is implemented in the abstract class because most states
     // share the same checks, and we want to avoid repeating code.
     // It may be overridden when necessary (ProppedState, for example)
     if (!door.isClosed()) door.setClosed(true);
     else System.out.println("Can't close door " + door.getId() + " because it's already closed"); }
 
-  public void changeState(DoorState newState, String action) {
+  protected void changeState(DoorState newState, String action) {
     // Aquest mètode fa les comprovacions comuns. Existeix per no repetir-les en altres classes.
 
     // si l'estat anterior és el mateix que el nou, es conserva l'estat anterior
@@ -50,9 +50,11 @@ public abstract class DoorState {
         System.out.println("Can't " + action + " door " + door.getId()
             + " because it may not change state while open");
       }
+    }else {
+      // Si la porta està tancada i el nou estat és diferent
+      door.setState(newState);
     }
-    // Si la porta està tancada i el nou estat és diferent
-    door.setState(newState);
+
   }
 
   public void doAction(String action) {

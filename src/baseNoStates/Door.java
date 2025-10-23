@@ -3,11 +3,6 @@ package baseNoStates;
 import baseNoStates.requests.RequestReader;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
-
-
 public class Door{
   private final String id;
   private final String from;

@@ -8,7 +8,6 @@ import java.util.Arrays;
 
 public final class DirectoryUsers {
   private static final ArrayList<User> users = new ArrayList<>();
-  private static final ArrayList<UserGroup> userGroups = new ArrayList<>();
 
   public static void makeUsers() {
     //TODO: make user groups according to the specifications in the comments, because
@@ -17,87 +16,82 @@ public final class DirectoryUsers {
     createUserGroups();
 
     // crear y asignar users a grupos
-    createAndAssignUsers();
   }
 
   private static void createUserGroups() {
 
-      UserGroup blank = new UserGroup( // user sin privilegios ("blank")
-              "blank",
-              Arrays.asList(),
-              LocalDateTime.of(1, 1, 1, 0, 0),
-              LocalDateTime.of(1, 1, 1, 0, 0),
-              Arrays.asList(),
-              LocalTime.of(0, 0),
-              LocalTime.of(0, 0)
-      );
-      userGroups.add(blank);
+    UserGroup blank = new UserGroup( // user sin privilegios ("blank")
+            "blank",
+            Arrays.asList(),
+            LocalDateTime.of(1, 1, 1, 0, 0),
+            LocalDateTime.of(1, 1, 1, 0, 0),
+            Arrays.asList(),
+            LocalTime.of(0, 0),
+            LocalTime.of(0, 0)
+    );
 
-      UserGroup employees = new UserGroup("employees",
-                Arrays.asList(Actions.UNLOCK_SHORTLY),
+
+    UserGroup employees = new UserGroup("employees",
+              Arrays.asList(Actions.UNLOCK_SHORTLY),
+            LocalDateTime.of(2025, 9, 1, 0, 0),
+              LocalDateTime.of(2026, 3, 1, 0, 0),
+              Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY,
+                      DayOfWeek.THURSDAY, DayOfWeek.FRIDAY),
+              LocalTime.of(9, 0),
+              LocalTime.of(17, 0)
+    );
+
+
+    UserGroup managers = new UserGroup("managers",
+              Arrays.asList(Actions.LOCK, Actions.UNLOCK, Actions.UNLOCK_SHORTLY),
               LocalDateTime.of(2025, 9, 1, 0, 0),
-                LocalDateTime.of(2026, 3, 1, 0, 0),
-                Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY,
-                        DayOfWeek.THURSDAY, DayOfWeek.FRIDAY),
-                LocalTime.of(9, 0),
-                LocalTime.of(17, 0)
-      );
-      userGroups.add(employees);
+              LocalDateTime.of(2026, 3, 1, 0, 0),
+              Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY,
+                      DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY),
+              LocalTime.of(8, 0),
+              LocalTime.of(20, 0)
+    );
 
-      UserGroup managers = new UserGroup("managers",
-                Arrays.asList(Actions.LOCK, Actions.UNLOCK, Actions.UNLOCK_SHORTLY),
-                LocalDateTime.of(2025, 9, 1, 0, 0),
-                LocalDateTime.of(2026, 3, 1, 0, 0),
-                Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY,
-                        DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY),
-                LocalTime.of(8, 0),
-                LocalTime.of(20, 0)
-      );
 
-      userGroups.add(managers);
+    UserGroup admin = new UserGroup("admin",
+              Arrays.asList(Actions.LOCK, Actions.UNLOCK, Actions.UNLOCK_SHORTLY),
+            LocalDateTime.of(2024, 1, 1, 0, 0),
+              LocalDateTime.of(2100, 1, 1, 0, 0),
+              Arrays.asList(DayOfWeek.values()),
+              LocalTime.MIN,
+              LocalTime.MAX
+    );
 
-      UserGroup admin = new UserGroup("admin",
-                Arrays.asList(Actions.LOCK, Actions.UNLOCK, Actions.UNLOCK_SHORTLY),
-              LocalDateTime.of(2024, 1, 1, 0, 0),
-                LocalDateTime.of(2100, 1, 1, 0, 0),
-                Arrays.asList(DayOfWeek.values()),
-                LocalTime.MIN,
-                LocalTime.MAX
-      );
 
-      userGroups.add(admin);
-  }
+    // user sin privilegios ("blank")
+    User bernat = new User("Bernat", "12345");
+    User blai = new User("Blai", "77532");
+    blank.addUser(bernat); // blank group
+    blank.addUser(blai);
+    users.add(bernat);
+    users.add(blai);
 
-  private static void createAndAssignUsers() {
-      // user sin privilegios ("blank")
-      User bernat = new User("Bernat", "12345");
-      User blai = new User("Blai", "77532");
-      userGroups.get(0).addUser(bernat); // blank group
-      userGroups.get(0).addUser(blai);
-      users.add(bernat);
-      users.add(blai);
+    // employees
+    User ernest = new User("Ernest", "74984");
+    User eulalia = new User("Eulalia", "43295");
+    employees.addUser(ernest);
+    employees.addUser(eulalia);
+    users.add(ernest);
+    users.add(eulalia);
 
-      // employees
-      User ernest = new User("Ernest", "74984");
-      User eulalia = new User("Eulalia", "43295");
-      userGroups.get(1).addUser(ernest);
-      userGroups.get(1).addUser(eulalia);
-      users.add(ernest);
-      users.add(eulalia);
+    // managers
+    User manel = new User("Manel", "95783");
+    User marta = new User("Marta", "05827");
+    managers.addUser(manel);
+    managers.addUser(marta);
+    users.add(manel);
+    users.add(marta);
 
-      // managers
-      User manel = new User("Manel", "95783");
-      User marta = new User("Marta", "05827");
-      userGroups.get(2).addUser(manel);
-      userGroups.get(2).addUser(marta);
-      users.add(manel);
-      users.add(marta);
-
-      // admin
-      User ana = new User("Ana", "11343");
-      userGroups.get(3).addUser(ana);
-      users.add(ana);
-  }
+    // admin
+    User ana = new User("Ana", "11343");
+    admin.addUser(ana);
+    users.add(ana);
+}
 
   public static User findUserByCredential(String credential) {
     for (User user : users) {

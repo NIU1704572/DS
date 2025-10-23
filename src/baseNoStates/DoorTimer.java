@@ -9,7 +9,8 @@ import java.util.Timer;
 
 public class DoorTimer extends Observable {
   private Timer timer;
-  public DoorTimer() {
+  private static DoorTimer instance;
+  private DoorTimer() {
     this.timer = new Timer();
 
     // Tarea que se ejecutará en cada “tick”.
@@ -22,5 +23,12 @@ public class DoorTimer extends Observable {
       }
     };
     timer.scheduleAtFixedRate(timerTask, 1000, 1000);
+  }
+
+  public static DoorTimer getInstance() {
+    if (instance == null) {
+      instance = new DoorTimer();
+    }
+    return instance;
   }
 }

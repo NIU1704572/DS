@@ -123,10 +123,12 @@ public class RequestReader implements Request {
                 addReason("User not authorized for this action");
                 return;
             }
+
+          authorized = true;
+          userName = user.getName();
+          return;
         }
-        authorized = true;
-        userName = user.getName();
-        return;
+
     }
 
     // Verificar si puede LOCK/UNLOCK/UNLOCK_SHORTLY en tiempo
