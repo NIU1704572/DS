@@ -31,6 +31,7 @@ public final class DirectoryUsers {
     );
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
     UserGroup employees = new UserGroup("employees",
               Arrays.asList(Actions.UNLOCK_SHORTLY),
@@ -59,6 +60,13 @@ public final class DirectoryUsers {
                 Arrays.asList(Actions.UNLOCK_SHORTLY, Actions.OPEN, Actions.CLOSE),
 =======
 
+=======
+<<<<<<< HEAD
+      UserGroup employees = new UserGroup("employees",
+                Arrays.asList(Actions.UNLOCK_SHORTLY, Actions.OPEN, Actions.CLOSE),
+=======
+
+>>>>>>> Stashed changes
     UserGroup employees = new UserGroup("employees",
               Arrays.asList(Actions.UNLOCK_SHORTLY),
             LocalDateTime.of(2025, 9, 1, 0, 0),
@@ -93,6 +101,9 @@ public final class DirectoryUsers {
       );
 =======
 >>>>>>> b9a1a1ffb6097522703aa0e2beb84a31111a93bf
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
     UserGroup admin = new UserGroup("admin",
@@ -105,7 +116,10 @@ public final class DirectoryUsers {
     );
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 <<<<<<< HEAD
       UserGroup admin = new UserGroup("admin",
                 Arrays.asList(Actions.LOCK, Actions.UNLOCK, Actions.UNLOCK_SHORTLY, Actions.OPEN, Actions.CLOSE),
@@ -117,6 +131,9 @@ public final class DirectoryUsers {
       );
 =======
 >>>>>>> b9a1a1ffb6097522703aa0e2beb84a31111a93bf
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
     // user sin privilegios ("blank")
@@ -144,7 +161,10 @@ public final class DirectoryUsers {
     users.add(marta);
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 <<<<<<< HEAD
       // managers
       User manel = new User("Manel", "95783");
@@ -160,6 +180,9 @@ public final class DirectoryUsers {
       users.add(ana);
   }
   //Encuentra el user segun su credential
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     // admin
