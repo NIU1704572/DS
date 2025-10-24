@@ -32,7 +32,7 @@ public final class DirectoryUsers {
 
 
     UserGroup employees = new UserGroup("employees",
-              Arrays.asList(Actions.UNLOCK_SHORTLY),
+              Arrays.asList(Actions.UNLOCK_SHORTLY, Actions.OPEN, Actions.CLOSE),
             LocalDateTime.of(2025, 9, 1, 0, 0),
               LocalDateTime.of(2026, 3, 1, 0, 0),
               Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY,
@@ -43,7 +43,7 @@ public final class DirectoryUsers {
 
 
     UserGroup managers = new UserGroup("managers",
-              Arrays.asList(Actions.LOCK, Actions.UNLOCK, Actions.UNLOCK_SHORTLY),
+              Arrays.asList(Actions.LOCK, Actions.UNLOCK, Actions.UNLOCK_SHORTLY, Actions.OPEN, Actions.CLOSE),
               LocalDateTime.of(2025, 9, 1, 0, 0),
               LocalDateTime.of(2026, 3, 1, 0, 0),
               Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY,
@@ -54,7 +54,7 @@ public final class DirectoryUsers {
 
 
     UserGroup admin = new UserGroup("admin",
-              Arrays.asList(Actions.LOCK, Actions.UNLOCK, Actions.UNLOCK_SHORTLY),
+              Arrays.asList(Actions.LOCK, Actions.UNLOCK, Actions.UNLOCK_SHORTLY, Actions.OPEN, Actions.CLOSE),
             LocalDateTime.of(2024, 1, 1, 0, 0),
               LocalDateTime.of(2100, 1, 1, 0, 0),
               Arrays.asList(DayOfWeek.values()),
