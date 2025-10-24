@@ -33,6 +33,7 @@ public final class DirectoryUsers {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
     UserGroup employees = new UserGroup("employees",
               Arrays.asList(Actions.UNLOCK_SHORTLY),
@@ -61,6 +62,13 @@ public final class DirectoryUsers {
                 Arrays.asList(Actions.UNLOCK_SHORTLY, Actions.OPEN, Actions.CLOSE),
 =======
 
+=======
+<<<<<<< HEAD
+      UserGroup employees = new UserGroup("employees",
+                Arrays.asList(Actions.UNLOCK_SHORTLY, Actions.OPEN, Actions.CLOSE),
+=======
+
+>>>>>>> Stashed changes
 =======
 <<<<<<< HEAD
       UserGroup employees = new UserGroup("employees",
@@ -111,6 +119,9 @@ public final class DirectoryUsers {
 >>>>>>> b9a1a1ffb6097522703aa0e2beb84a31111a93bf
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -129,7 +140,10 @@ public final class DirectoryUsers {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -147,6 +161,9 @@ public final class DirectoryUsers {
 >>>>>>> b9a1a1ffb6097522703aa0e2beb84a31111a93bf
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -180,7 +197,10 @@ public final class DirectoryUsers {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -203,6 +223,9 @@ public final class DirectoryUsers {
 =======
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
