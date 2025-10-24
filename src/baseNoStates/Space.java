@@ -6,7 +6,7 @@ import java.util.Arrays;
 public class Space extends Area{
   private final String id;
   private final ArrayList<Door> doors;
-  Space(Partition parent, String id, Door ... doors) {
+  Space(Partition parent, String id, Door ... doors) { //inicializa el espacio
     this.id=id;
     this.doors = new ArrayList<>();
     this.doors.addAll(Arrays.asList(doors));

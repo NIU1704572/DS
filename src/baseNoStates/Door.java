@@ -9,7 +9,7 @@ public class Door{
   private final String to;
   private boolean closed; // physically
   private DoorState state; // Digitally
-
+  // funcion para inicializar Door
   public Door(String id, String from, String to) {
     this.id = id;
     this.from = from;

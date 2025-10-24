@@ -22,7 +22,7 @@ public class Partition extends Area{
     return id;
   }
 
-
+// Acceso de las puertas pasado en un array
   public ArrayList<Door> getDoorsGivingAccess(){
     ArrayList<Door> returnArray = new ArrayList<>();
 
