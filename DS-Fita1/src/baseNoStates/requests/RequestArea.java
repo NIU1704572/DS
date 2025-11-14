@@ -1,0 +1,107 @@
+package baseNoStates.requests;
+
+import baseNoStates.*;
+import baseNoStates.Area;
+import baseNoStates.DirectoryAreas;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+
+
+public class RequestArea implements Request {
+  private final String credential;
+  private final String action;
+  private final String areaId;
+  private final LocalDateTime now;
+  private ArrayList<RequestReader> requests = new ArrayList<>();
+
+
+  public RequestArea(String credential, String action, LocalDateTime now, String areaId) {
+    this.credential = credential;
+    this.areaId = areaId;
+    assert action.equals(Actions.LOCK) || action.equals(Actions.UNLOCK)
+            : "invalid action " + action + " for an area request";
+    this.action = action;
+    this.now = now;
+  }
+
+  public String getAction() {
+    return action;
+  }
+
+  @Override
+  public String toString() {
+    String requestsDoorsStr;
+    if (requests.size() == 0) {
+      requestsDoorsStr = "";
+    } else {
+      requestsDoorsStr = requests.toString();
+    }
+    return "Request{"
+        + "credential=" + credential
+        + ", action=" + action
+        + ", now=" + now
+        + ", areaId=" + areaId
+        + ", requestsDoors=" + requestsDoorsStr
+        + "}";
+  }
+
+  @Override
+  public JSONObject answerToJson() {
+    JSONObject json = new JSONObject();
+    json.put("action", action);
+    json.put("areaId", areaId);
+    JSONArray jsonRequests = new JSONArray();
+    for (RequestReader rd : requests) {
+      jsonRequests.put(rd.answerToJson());
+    }
+    json.put("requestsDoors", jsonRequests);
+    return json;
+  }
+
+
+  // processing the request of an area is creating the corresponding door requests and forwarding
+  // them to all of its doors. For some it may be authorized and action will be done, for others
+  // it won't be authorized and nothing will happen to them.
+  public void process() {
+    // commented out until Area, Space and Partition are implemented
+    User user = DirectoryUsers.findUserByCredential(credential);
+    Area area = DirectoryAreas.findAreaById(areaId);
+    assert area != null : "area " + areaId + " not found";
+
+    ArrayList<Door> givingAccess = area.getDoorsGivingAccess();
+    //since a door can be contained by multiple unrelated partitions, we check for repeats
+    ArrayList<Door> requestedDoors = new ArrayList<>();
+    for (Door door : givingAccess) {
+      if (!requestedDoors.contains(door)) {
+        requestedDoors.add(door);
+      }
+    }
+    System.out.println(requestedDoors);
+    for (Door door : requestedDoors) {
+      RequestReader requestReader = new RequestReader(credential, action, now, door.getId());
+      requestReader.process();
+      requests.add(requestReader);
+    }
+  }
+}
+    // this sets the boolean authorize attribute of the request
+    // even if not authorized we process the request, so that if desired we could log all
+    // the requests made to the server as part of processing the request
+
+
+    // make the door requests and put them into the area request to be authorized later and
+    // processed later
+    // an Area is a Space or a Partition
+      // is null when from the app we click on an action but no place is selected because
+      // there (flutter) I don't control like I do in javascript that all the parameters are provided
+
+      // Make all the door requests, one for each door in the area, and process them.
+      // Look for the doors in the spaces of this area that give access to them.
+        // after process() the area request contains the answer as the answer
+        // to each individual door request, that is read by the simulator/Flutter app
+
+
+

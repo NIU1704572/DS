@@ -1,0 +1,4 @@
+CORRECCIONS:
+S'han afegit les classes Observable i observer al UML.
+S'ha el·liminat la fletxa entre requestReader i Door al UML
+S'han afegit més comentaris i s'ha mirat de millorarn els que ja hi eren
