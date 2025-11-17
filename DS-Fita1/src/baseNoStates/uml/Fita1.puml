@@ -35,24 +35,43 @@ package "baseNoStates" {
     # door : Door
     + DoorState(stateName:String, door:Door)
     + getState() : String
-    + doAction(action:String)
-    # open()
-    # close()
-    # changeState(next:DoorState, reason:String)
+    + {abstract}open() : String
+    + {abstract}close() : String
+    + {abstract}lock() : String
+    + {abstract}unlock() : String
+    + {abstract}unlock_shortly() : String
   }
 
   class LockedState{
-    # open()
+    +open() : String
+    +close() : String
+    +lock() : String
+    +unlock() : String
+    +unlock_shortly() : String
+
   }
   class UnlockedState{
-  # changeState(next:DoorState, reason:String)
+    +open() : String
+    +close() : String
+    +lock() : String
+    +unlock() : String
+    +unlock_shortly() : String
   }
   class ProppedState{
-  # close()
+    +open() : String
+    +close() : String
+    +lock() : String
+    +unlock() : String
+    +unlock_shortly() : String
   }
   class UnlockedShortlyState <<Observer>> {
-    - secondsElapsed : int
-    + update(tick:LocalDateTime)
+    - endTime : LocalDateTime
+    +open() : String
+    +close() : String
+    +lock() : String
+    +unlock() : String
+    +unlock_shortly() : String
+    + update(o : Observable, arg : Object)
   }
 
   DoorState <|.. LockedState
@@ -101,8 +120,8 @@ package "baseNoStates" {
 
   Area <|.. Space
   Area <|.. Partition
-  Partition *--> "*" Area
-  Space --> "*" Door : «gives access»
+  Partition *--> Area : spaces "1.*"
+  Space --> Door : doors "1.*"
 
 
   class DirectoryAreas <<repository>> {
@@ -209,7 +228,7 @@ abstract class Observable
 interface Observer
 }
 
-UnlockedShortlyState..>java.util.Observer
-DoorTimer..>java.util.Observable
+UnlockedShortlyState..|>java.util.Observer
+DoorTimer..|>java.util.Observable
 
 @enduml

@@ -23,12 +23,50 @@ public class Door{
     // its state, and if closed or open
     if (request.isAuthorized()) {
       String action = request.getAction();
-      state.doAction(action);
+      String reason = doAction(action);
+      if (reason != null) {
+        request.addReason(reason);
+      }
     } else {
       System.out.println("not authorized");
     }
     request.setDoorStateName(getStateName());
   }
+  public String doAction(String action) {
+    // Aquest és un mètode és "template method"
+    // Les accions que no són open i close no tenen funcions designades perquè s'executen de la mateixa
+    // manera en totes les classes. Hem decidit fer aquesta implemetació perquè, encara que no fa
+    // un bon ús del polimorfisme, només necessitem una sola funció i repetim molt menys codi.
+    String reason = null;
+    switch (action) {
+      case Actions.OPEN:
+        reason = state.open();
+        break;
+
+      case Actions.CLOSE:
+        reason = state.close();
+        break;
+
+      case Actions.LOCK:
+        reason = state.lock();
+        break;
+
+      case Actions.UNLOCK:
+        reason = state.unlock();
+        break;
+
+      case Actions.UNLOCK_SHORTLY:
+        reason = state.unlock_shortly();
+        break;
+
+      default:
+        assert false : "Unknown action " + action;
+        System.exit(-1);
+        reason = "Unknown action " + action;
+    }
+    return reason;
+  }
+
   public boolean isClosed() {
     return closed;
   }
