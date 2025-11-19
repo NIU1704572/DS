@@ -35,24 +35,43 @@ package "baseNoStates" {
     # door : Door
     + DoorState(stateName:String, door:Door)
     + getState() : String
-    + doAction(action:String)
-    # open()
-    # close()
-    # changeState(next:DoorState, reason:String)
+    + {abstract}open() : String
+    + {abstract}close() : String
+    + {abstract}lock() : String
+    + {abstract}unlock() : String
+    + {abstract}unlock_shortly() : String
   }
 
   class LockedState{
-    # open()
+    +open() : String
+    +close() : String
+    +lock() : String
+    +unlock() : String
+    +unlock_shortly() : String
+
   }
   class UnlockedState{
-  # changeState(next:DoorState, reason:String)
+    +open() : String
+    +close() : String
+    +lock() : String
+    +unlock() : String
+    +unlock_shortly() : String
   }
   class ProppedState{
-  # close()
+    +open() : String
+    +close() : String
+    +lock() : String
+    +unlock() : String
+    +unlock_shortly() : String
   }
   class UnlockedShortlyState <<Observer>> {
-    - secondsElapsed : int
-    + update(tick:LocalDateTime)
+    - endTime : LocalDateTime
+    +open() : String
+    +close() : String
+    +lock() : String
+    +unlock() : String
+    +unlock_shortly() : String
+    + update(o : Observable, arg : Object)
   }
 
   DoorState <|.. LockedState
@@ -65,9 +84,9 @@ package "baseNoStates" {
     - timer : java.util.Timer
     +{static}getInstance() : DoorTimer
   }
+  DoorTimer *--> DoorTimer : instance "1"
 
   class DirectoryDoors <<repository>> {
-    - allDoors : ArrayList<Door>
     - timer : DoorTimer
     {static} + makeDoors()
     {static} + getDoorById(id:String) : Door
@@ -101,8 +120,8 @@ package "baseNoStates" {
 
   Area <|.. Space
   Area <|.. Partition
-  Partition *--> "*" Area
-  Space --> "*" Door : «gives access»
+  Partition *--> Area : spaces "1.*"
+  Space --> Door : doors "1.*"
 
 
   class DirectoryAreas <<repository>> {
@@ -116,7 +135,6 @@ package "baseNoStates" {
   class User {
     - name : String
     - credential : String
-    - userGroup : UserGroup
     + setUserGroup(group:UserGroup)
     + isAuthorizedDateTime(now:LocalDateTime) : boolean
     + canDoAction(action:String) : boolean
@@ -127,7 +145,6 @@ package "baseNoStates" {
 
   class UserGroup {
     - name : String
-    - users : List<User>
     - allowedActions : List<String>
     - startDate : LocalDateTime
     - endDate   : LocalDateTime
@@ -141,15 +158,14 @@ package "baseNoStates" {
   }
 
   class DirectoryUsers <<repository>> {
-    - users : ArrayList<User>
-    - userGroups : ArrayList<UserGroup>
     {static} + makeUsers()
     {static} + findUserByCredential(credential:String) : User
   }
 
-  UserGroup --> "*" User
-  User --> "1" UserGroup : belongs to
-  DirectoryUsers --> "*" User
+  UserGroup --> User : users "*"
+  User --> UserGroup : userGroup  "1"
+  DirectoryUsers --> User : allUsers "*"
+
   class WebServer {
     + WebServer()
     + handleReader(...)
@@ -209,7 +225,8 @@ abstract class Observable
 interface Observer
 }
 
-UnlockedShortlyState..>java.util.Observer
-DoorTimer..>java.util.Observable
+UnlockedShortlyState..|>java.util.Observer
+DoorTimer..|>java.util.Observable
+DoorTimer --[hidden]> UnlockedShortlyState
 
 @enduml

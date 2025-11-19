@@ -7,17 +7,15 @@ import java.time.LocalDateTime;
 public class UnlockedShortlyState extends DoorState implements Observer {
   private LocalDateTime endTime;
   public UnlockedShortlyState(Door door) {
-    // Durante ~10s (cadencia del DoorTimer), la puerta permite abrirse.
-    // Nos suscribimos al reloj global para recibir ticks de 1s (DoorTimer).
     super("unlocked_shortly", door);
-    DoorTimer.getInstance().addObserver(this);
-    this.endTime = LocalDateTime.now().plusSeconds(10); // arranca la cuenta atrás al entrar en el estado
+    DoorTimer.getInstance().addObserver(this);        // Nos suscribimos al reloj global para recibir ticks cada segundo.
+    this.endTime = LocalDateTime.now().plusSeconds(10);   // calculamos el tiempo en que se acaba el estado
   }
 
 
   @Override
   public String close(){
-    if (!door.isClosed()) {
+    if (door.isClosed()) {
       return "Door " + door.getId() + " is already closed";
     }
     door.setClosed(true);
@@ -56,14 +54,16 @@ public class UnlockedShortlyState extends DoorState implements Observer {
   }
 
   public void update(Observable o, Object arg) {
-    if(endTime.isAfter((LocalDateTime)arg)) {
-      if(door.isClosed() && door.getStateName().equals("unlocked_shortly")) {
-        // Si nadie la abrió durante la ventana, volvemos a estado bloqueado.
-        door.setState(new LockedState(door));
 
-      } else if (door.getStateName().equals("unlocked_shortly")) {
-        // Sino pasamos a Propped.
-        door.setState(new ProppedState(door));
+    if(endTime.isBefore((LocalDateTime)arg)) {
+      if (door.getStateName().equals("unlocked_shortly")) {
+        // Este check es para el caso en qué alguien sobreescribe el estado de la puerta.
+        // No queremos afectar al nuevo estado.
+        if (door.isClosed()) {
+          door.setState(new LockedState(door));
+        } else {
+          door.setState(new ProppedState(door));
+        }
       }
       // Dejamos de observar el temporizador para evitar fugas y callbacks extra.
       o.deleteObserver(this);

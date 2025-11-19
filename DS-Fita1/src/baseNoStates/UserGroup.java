@@ -17,8 +17,9 @@ public class UserGroup {
     private final LocalTime startTime;
     private final LocalTime endTime;
 
-    // contructor (larguisimo lo se, es lo q hay)
-    public UserGroup(String name, List<String> allowedActions, LocalDateTime startDate, LocalDateTime endDate, List<DayOfWeek> allowedDays, LocalTime startTime, LocalTime endTime) {
+    // contructor
+    public UserGroup(String name, List<String> allowedActions, LocalDateTime startDate, LocalDateTime endDate,
+                     List<DayOfWeek> allowedDays, LocalTime startTime, LocalTime endTime) {
         this.name = name;
         this.users = new ArrayList<>();
         this.allowedActions = allowedActions;
